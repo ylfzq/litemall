@@ -99,7 +99,7 @@
         </el-form-item>
 
         <el-form-item :label="$t('goods_edit.form.detail')">
-          <editor v-model="goods.detail" :init="editorInit" />
+          <editor api-key="03s7jjth7o0i8410n8zxemnme19ajwp4v517lpdleqwhdjxd" v-model="goods.detail" :init="editorInit" />
         </el-form-item>
       </el-form>
     </el-card>
