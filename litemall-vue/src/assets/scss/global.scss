@@ -42,3 +42,23 @@ body {
 .scroll-wrap {
 	overflow-y: scroll;
 }
+
+.van-icon {
+	display: flex;
+	align-items: center;
+}
+
+.text1line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text2lines {
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}

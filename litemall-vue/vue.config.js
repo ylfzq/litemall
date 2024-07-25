@@ -14,7 +14,7 @@ module.exports = {
     port: 6255,
     proxy: {
       '/wx': {
-        target: 'http://localhost:8080'
+        target: 'https://litemall.zhouqian.top:8443'
       },
     },
   },
@@ -29,6 +29,7 @@ module.exports = {
       }
     },
     optimization: {
+      minimize: false,
       runtimeChunk: {
         name: entrypoint => `runtime~${entrypoint.name}`
       },

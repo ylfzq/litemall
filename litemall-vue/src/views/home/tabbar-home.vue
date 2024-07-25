@@ -5,14 +5,17 @@
                   @click="$router.push({ name: 'search' })" />
       <div class="tal_class_searchMask"></div>
     </div>
-    <van-swipe :autoplay="3000"
-               indicator-color="white">
-      <van-swipe-item v-for="(banner, index) in shopInfos.banner"
-                      :key="index">
-        <img :src="banner.url"
-             style="height:230px">
-      </van-swipe-item>
-    </van-swipe>
+
+    <div class="banner">
+      <van-swipe 
+                :autoplay="3000"
+                indicator-color="white">
+        <van-swipe-item v-for="(banner, index) in shopInfos.banner"
+                        :key="index">
+          <img :src="banner.url">
+        </van-swipe-item>
+      </van-swipe>
+    </div>
 
     <div class="goods-channel">
       <div class="item"
@@ -25,8 +28,9 @@
       </div>
     </div>
 
-    <van-panel title="优惠券"
-               style=" padding-bottom: 10px;">
+    <van-panel v-if="false" 
+              title="优惠券"
+              style="padding-bottom: 10px;">
       <div class="van-coupon-item"
            v-for="(coupon,index) in shopInfos.couponList"
            :key="index"
@@ -49,7 +53,7 @@
       </div>
     </van-panel>
 
-    <van-panel>
+    <van-panel v-if="false">
       <van-card :thumb-link="goDetail(grouponGood.id)"
                 v-for="(grouponGood ,index) in shopInfos.grouponList"
                 :key="index"
@@ -82,7 +86,34 @@
       </div>
     </van-panel>
 
-    <van-panel>
+    <van-panel class="new-goods">
+      <div slot='header'>
+        <van-cell-group>
+          <van-cell title="新品首发"
+                    isLink>
+            <router-link to="/items/new"
+                         class="text-desc">查看更多</router-link>
+          </van-cell>
+        </van-cell-group>
+      </div>
+      <div class="content">
+        <div class="item" 
+            v-for="(newGood ,index) in shopInfos.newGoodsList"
+            :key="index">
+          <router-link :to="{ path: `/items/detail/${newGood.id}`}">
+            <img :src="newGood.picUrl">
+          </router-link>
+          <span class="title text2lines">{{newGood.name}}</span>
+          <div class="line2">
+            <span class="price">{{normalizeMoneyStr(newGood.retailPrice)}}</span>
+            <span class="strikethrough">{{normalizeMoneyStr(newGood.counterPrice)}}</span>
+            <!-- <span class="sales">销售{{newGood.sales||"3k+"}}</span> -->
+          </div>
+        </div>
+      </div>
+    </van-panel>
+
+    <van-panel v-if="false">
       <van-grid clickable
                 :column-num="2">
         <van-grid-item v-for="(brand ,index) in shopInfos.brandList"
@@ -105,57 +136,36 @@
       </div>
     </van-panel>
 
-    <van-panel>
-      <van-row gutter>
-        <van-col span="12"
-                 v-for="(newGood ,index) in shopInfos.newGoodsList"
-                 :key="index">
-          <router-link :to="{ path: `/items/detail/${newGood.id}`}">
-            <img :src="newGood.picUrl"
-                 style="width:180px;height:180px;">
-          </router-link>
-          <span style="padding-left: 20px;position: relative;bottom: 10px; color: rgb(123, 116, 116);white-space: nowrap;">{{newGood.name}}</span>
-          <span style="padding-left: 80px;position: relative;bottom: 10px; color:#ab956d">￥ {{newGood.retailPrice}}</span>
-        </van-col>
-      </van-row>
-      <div slot='header'>
-        <van-cell-group>
-          <van-cell title="新品首发"
-                    isLink>
-            <router-link to="/items/new"
-                         class="text-desc">更多新品首发</router-link>
-          </van-cell>
-        </van-cell-group>
+    <van-panel class="hot-goods">
+      <div class="content">
+        <div class="item" v-for="(groupGood ,index) in shopInfos.hotGoodsList" :key="index">
+          <van-card :thumb-link="goDetail(groupGood.id)"
+                    :title="groupGood.name"
+                    :desc="groupGood.brief"
+                    :origin-price="normalizeMoneyStr(groupGood.counterPrice)"
+                    :price="normalizeMoneyStr(groupGood.retailPrice)"
+                    :thumb="groupGood.picUrl"
+                    @native-click="goDetail(groupGood.id)">
+            <!-- <div slot="footer">添加日期 {{item.addTime}}</div> -->
+          </van-card>
+        </div>
       </div>
-    </van-panel>
-
-    <van-panel>
-      <van-card :thumb-link="goDetail(groupGood.id)"
-                v-for="(groupGood ,index) in shopInfos.hotGoodsList"
-                :key="index"
-                :title="groupGood.name"
-                :desc="groupGood.brief"
-                :origin-price="groupGood.counterPrice"
-                :price="groupGood.retailPrice +'.00'"
-                :thumb="groupGood.picUrl"
-                @native-click="goDetail(groupGood.id)">
-        <!-- <div slot="footer">添加日期 {{item.addTime}}</div> -->
-      </van-card>
       <div slot='header'>
         <van-cell-group>
-          <van-cell title="人气推荐"
+          <van-cell title="热品推荐"
                     isLink>
             <router-link to="/items/hot"
-                         class="text-desc">更多人气推荐</router-link>
+                         class="text-desc">查看更多</router-link>
           </van-cell>
         </van-cell-group>
       </div>
     </van-panel>
 
-<van-panel>
-      <van-grid clickable
-                :column-num="2">
-        <van-grid-item v-for="(topic ,index) in shopInfos.topicList"
+<van-panel class="topic-goods">
+      <van-grid class="content"
+                clickable
+                :column-num="1">
+        <van-grid-item class="item" v-for="(topic ,index) in shopInfos.topicList"
                        :key="index"
                        :url="goTopic(topic.id)">
           <img :src="topic.picUrl"
@@ -169,7 +179,7 @@
           <van-cell title="专题精选"
                     isLink>
             <router-link to="/items/topic-list"
-                         class="text-desc">更多专题精选</router-link>
+                         class="text-desc">查看更多</router-link>
           </van-cell>
         </van-cell-group>
       </div>
@@ -180,6 +190,7 @@
 
 <script>
 import { getHome, goodsCategory, couponReceive } from '@/api/api';
+import MoneyUtils from '../../utils/money.js';
 import scrollFixed from '@/mixin/scroll-fixed';
 import _ from 'lodash';
 
@@ -217,6 +228,9 @@ export default {
   },
 
   methods: {
+    normalizeMoneyStr(moneyStr) {
+      return MoneyUtils.normalizeMoneyStr(moneyStr);
+    },
     goDetail(id) {
       return `#/items/detail/${id}`;
     },
@@ -274,7 +288,7 @@ export default {
   margin-bottom: 10px;
 }
 .van-panel {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .goods-channel {
   background: #fff;
@@ -286,8 +300,8 @@ export default {
 }
 
 .goods-channel .item {
-  width: 50px;
-  height: 50px;
+  width: calc(16% - 10px);
+  height: auto;
   margin-left: 10px;
 }
 
@@ -306,6 +320,144 @@ export default {
   margin-bottom: 10px;
   color: #333;
 }
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 50%; 
+  .van-swipe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    .van-swipe-item {
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.new-goods {
+  background-color: #f2f2f2;
+  .content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;;
+    margin: 0 12px;
+    .item {
+      display: flex;
+      width: calc(33% - 6px);
+      margin: 6px 0 6px 0;
+      flex-flow: column nowrap;
+      background-color: #ffffff;
+      border: 0 solid #ffffff;
+      border-radius: 6px;
+      a {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 6px 6px 0 0;
+          object-fit: cover;
+        }
+      }
+
+      .title {
+        color: rgb(123, 116, 116);
+        margin: 4px 6px;
+        white-space: wrap;
+        font-size: 14px;
+        line-height: 16px;
+        height: 32px;
+      }
+      .line2 {
+        flex: 0 0 auto;
+        display: flex;
+        flex-flow: row nowrap;
+        flex: none;
+        align-items: flex-end;
+        overflow: hidden;
+        margin: 12px 6px 8px 4px;
+        .price {
+          flex: auto;
+          text-align: start;
+          font-size: 14px;
+          line-height: 14px;
+          transform: scale(0.95, 1);
+          color: red;
+        }
+        .price::before {
+          content: '￥';
+          display: inline;
+          font-size: 12px;
+          line-height: 10px;
+          transform: scale(0.8);
+        }
+        .strikethrough {
+          flex: none;
+          font-size: 12px;
+          line-height: 10px;
+          transform: scale(0.8);
+          text-decoration: line-through;
+          color:#c0c0c0;
+        }
+        .strikethrough::before {
+          content: '￥';
+          display: inline;
+          text-decoration: line-through;
+          font-size: 12px;
+          line-height: 10px;
+          transform: scale(0.8);
+        }
+        .sales {
+          flex: auto;
+          font-size: 12px;
+          line-height: 12px;
+          color:#ab956d;
+          text-align: end;
+        }
+      }
+    }
+  }
+}
+
+.hot-goods {
+  background-color: #f2f2f2;
+  .content {
+    margin: 0 6px 6px 6px;
+    .item {
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+  }
+}
+
+.topic-goods {
+  background-color: #f2f2f2;
+  .content {
+    margin: 0 6px 6px 6px;
+    .item {
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+  }
+}
+
 .van-coupon-cell--selected {
   color: #323233;
 }
